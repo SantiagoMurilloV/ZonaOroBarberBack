@@ -1,6 +1,5 @@
 {
-<<<<<<< HEAD
-  "name": "ielabs-back",
+  "name": "zonaOroBarber-back",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -14,78 +13,21 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^1.6.5",
-    "bullfit-back": "file:",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-validator": "^7.0.1",
     "firebase": "^10.3.1",
     "firebase-admin": "^11.10.1",
-    "ielabs-back": "file:",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
     "mongodb": "^6.1.0",
     "mongoose": "^7.6.3",
     "node-cron": "^3.0.3",
     "nodemon": "^3.0.1",
+    "onaOroBarber-back": "file:",
     "puppeteer": "^10.4.0",
-    "twilio": "^4.20.1"
-=======
-  "name": "zonaorobaber_app",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.5.1",
-    "@fortawesome/free-solid-svg-icons": "^6.5.1",
-    "@fortawesome/react-fontawesome": "^0.2.0",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "axios": "^1.6.5",
-    "chart.js": "^4.4.2",
-    "date-fns": "^3.3.1",
-    "date-fns-tz": "^2.0.0",
-    "firebase": "^10.7.2",
-    "moment": "^2.30.1",
-    "moment-timezone": "^0.5.44",
-    "react": "^18.2.0",
-    "react-chartjs-2": "^5.2.0",
-    "react-datepicker": "^5.0.0",
-    "react-dom": "^18.2.0",
-    "react-modal": "^3.16.1",
-    "react-router-dom": "^6.21.3",
-    "react-router-hash-link": "^2.4.3",
-    "react-scripts": "5.0.1",
-    "react-select": "^5.8.0",
-    "react-spinners": "^0.13.8",
-    "react-toastify": "^10.0.4",
-    "sweetalert2": "^11.10.4",
-    "web-vitals": "^2.1.4",
-    "zonaorobaber_app": "file:"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
->>>>>>> 531b24dbac5e87853ff8d3872405255fbc872d12
+    "twilio": "^4.20.1",
+    "zonaOroBarber-back": "file:"
   }
 }
