@@ -1,0 +1,236 @@
+.button-re button {
+  width: 100px;
+  height: 30px;
+  box-shadow: 5px 3px 3px 0px rgb(255 255 255 / 79%);
+  margin-left: 0px;
+  border-color: white;
+  border-width: 10px;
+}
+
+.watermark-list{
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+  width: 230px;
+  opacity: 0.7;}
+
+.filters-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+.uri{
+  color: white;
+}
+
+.button-r {
+  background-color: #000000;
+  color: white;
+  padding: 10px 20px;
+  box-shadow: 5px 3px 3px 0px rgb(255 255 255 / 79%);
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  margin-right: 15px; 
+}
+
+.input-search {
+  padding: 22px 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 15px; 
+}
+
+.filter-select {
+  min-width: 150px;
+  margin-right: 15px; 
+}
+
+.filter-select__control {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  min-height: 38px;
+}
+
+.filter-select__menu {
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+.user-table-userList td {
+  text-align: left;
+  border-bottom: 1px solid #dddddd97;
+  font-weight: bolder;
+  font-size: 15px;
+  text-align: center;
+}
+.user-table-userList th {
+  background-color: #0c0c0c;
+  color: white;
+  font-weight: bold;
+  padding: 8px;
+  text-align: center;
+}
+.user-table-userList .first-column {
+  font-size: 16px; 
+}
+.header-cell {
+  text-align: center; 
+}
+
+
+.user-table-userList td:not(:last-child) {
+  margin-right: 2px;
+}
+
+.user-table-userList tr:nth-child(odd) {
+  background-color: #f2f2f21a;
+}
+
+.user-table-userList tr:nth-child(even) {
+  background-color: #e6e6e62b;
+}
+
+.input-search {
+  margin-bottom: 11px;
+  border-radius: 4px;
+  width: 252px;
+  height: 3px;
+  margin-left: 23px;
+  margin-top: 10px;
+}
+
+
+.Modal-userList {
+  background: #000000c7;
+  padding: 20px;
+  border-radius: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 25%;
+  box-shadow: 0 5px 15px #0c0c0c;
+}
+
+.form-group-userList {
+  display: flex;
+  justify-content: space-evenly;
+  margin-bottom: 9px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+
+.form-group-userList label {
+  flex-basis: 50%; 
+  display: block;
+  margin-bottom: 5px;
+  color: white;
+  font-size: 20px;
+  font-weight: bolder;
+}
+
+.form-group-userList input[type='text'] {
+  width:80%;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+.button-actions button  {
+  margin: 5px;
+  padding: 0px 0px;
+  background-color: #000000;
+  border-color: white;
+  color: white;
+  border: none;
+  cursor: pointer;
+  width: 118px;
+  height: 24px;
+  font-size: 10px;
+}
+.total{
+  color: white;
+  text-align: center;
+  font-size: x-large;
+  font-weight: bolder;
+}
+
+@media screen and (max-width: 768px) {
+  .filters-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: -17px;
+    width: 140%;
+    font-size: 22px;
+    flex-flow: wrap;
+    align-self: flex-start;
+    margin-bottom: 42px;
+  }
+  .user-table-userList{
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: auto;
+    border: 3px solid #d6d6d640;
+    background-color: white;
+    width: 300%;
+    font-weight: bolder;
+  }
+  .user-table th {
+    background-color: #0c0c0c;
+    color: white;
+    font-weight: bold;
+    padding: 30px;
+    text-align: center;
+}
+
+
+  .user-table td:not(:last-child) {
+      margin-right: 2px;
+      font-size: 10px;
+  }
+
+  .Modal-userList {
+    background: #000000c7;
+    padding: 20px;
+    border-radius: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    box-shadow: 0 5px 15px #0c0c0c;
+  }
+
+  .button-actions button  {
+      margin: 5px;
+      padding: 0px 0px;
+      background-color: #000000;
+      border-color: white;
+      color: white;
+      border: none;
+      cursor: pointer;
+      width: 118px;
+      height: 24px;
+      font-size: 10px;
+  }
+}
+
+
+@media screen and (max-width: 375px) {
+  .filters-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: -17px;
+    width: 140%;
+    font-size: 22px;
+    flex-flow: wrap;
+    align-self: flex-start;
+    margin-bottom: 42px;
+}
+
+}
+

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta
+    name="description"
+    content="Web site created using create-react-app"
+  />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/Recurso219.png" />
+  <link rel="apple-touch-icon" sizes="152x152" href="%PUBLIC_URL%/Recurso219.png" />
+<link
+  rel="apple-touch-icon"
+  sizes="180x180"
+  href="%PUBLIC_URL%/Recurso219.png"
+/>
+<link
+  rel="apple-touch-icon"
+  sizes="167x167"
+  href="%PUBLIC_URL%/Recurso219.png"
+/>
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <title>ZonaOroBarber</title>
+  <meta name="apple-mobile-web-app-title" content="ZonaOroBarber">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- Manejo del evento de instalación -->
+  <script>
+    let deferredPrompt;
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      deferredPrompt = event;     
+
+    });
+  </script>
+</head>
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('%PUBLIC_URL%/service-worker.js')
+        .then(registration => {
+          console.log('Service Worker registered successfully:', registration);
+        })
+        .catch(error => {
+          console.error('Error registering Service Worker:', error);
+        });
+    }
+  </script>
+
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        window.location.reload();
+      });
+    }
+  </script>
+
+
+  <script>
+    function enableDarkMode() {
+      document.body.classList.add('dark-mode');
+    }
+
+    function enableLightMode() {
+      document.body.classList.remove('dark-mode');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+{
+  "background_color": "black",
+  "categories": ["lifestyle", "beauty", "business", "productivity"],
+  "description": "It is an application to manage the reservations of each barber and have order within the barbershop.",
+  "dir": "ltr",
+  "display_override": ["standalone", "fullscreen"],
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose":"any"
+    },
+    {
+      "src": "favicon.ico",
+      "type": "image/png",
+      "sizes": "216x216",
+      "purpose":"any"
+    },
+    {
+      "src": "Recurso214_375.png",
+      "type": "image/png",
+      "sizes": "228x228",
+      "purpose":"any"
+    },
+    {
+      "src": "Recurso214_500.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose":"any"
+    }
+  ],
+  "lang": "es-MX",
+  "name": "ZonaOroBarber_app",
+  "orientation": "portrait",
+  "prefer_related_application": false,
+  "scope": "/",
+  "short_name": "ZonaOroBarber",
+  "start_url": "/",
+  "theme_color": "black"
+}
