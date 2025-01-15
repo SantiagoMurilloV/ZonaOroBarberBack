@@ -14,8 +14,6 @@ const appointments = require('./src/routes/api/appointmentsRoutes')
 
 const cors = require('cors');
 
-
-
 dotenv.config();
 
 app.use(express.json());
@@ -31,7 +29,22 @@ const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
 db.once('open', () => console.log('Conexión a la base de datos exitosa'));
 
-app.use(cors());
+// const allowedOrigins = ['https://bullfit-app-v2-0.vercel.app']; 
+// const corsOptions = {
+//   origin: function (origin, callback) {
+//     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('No permitido por CORS'));
+//     }
+//   },
+//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+//   optionsSuccessStatus: 200, 
+// };
+
+app.use(cors(corsOptions)); 
+
 app.use('/api', barbersRoutes);
 app.use('/api', reservationsRoutes);
 app.use('/api', financeRoutes);
