@@ -4,7 +4,7 @@ const Reservation = require('../models/reservations');
 
 
 exports.createReservation = async (req, res) => {
-  const { barberId, clientPhone, clientName, userId, typeOfHaircut, day, hours } = req.body;
+  const { barberId, clientPhone, clientName, userId, typeOfHaircut, day, hours, appointmentEnded, attendance } = req.body;
 
 
   const haircutDetails = {
@@ -82,7 +82,7 @@ exports.getReservationsByBarberDay = async (req, res) => {
   try {
     const query = { barberId : barberId };
     if (day) {
-      query.day = day; // Filtrar por día si se proporciona
+      query.day = day; 
     }
     const reservations = await Reservation.find(query).sort({ hours: 1 });
     res.status(200).json(reservations);
@@ -91,3 +91,18 @@ exports.getReservationsByBarberDay = async (req, res) => {
     res.status(500).json({ error: 'Error al obtener las reservas del barbero' });
   }
 };
+
+
+exports.deleteReservation = (req, res) => {
+  const reservationId = req.params.reservationId;
+  
+  Reservation.findByIdAndDelete(reservationId)
+    .then(deletedReservation => {
+      if (!deletedReservation) return res.status(404).json({ error: 'Barbero no encontrado' });
+      res.json({ message: 'Barbero eliminado con éxito', deletedReservation });
+    })
+    .catch(error => res.status(500).json({ error: 'Error al eliminar el barbero' }));
+};
+
+
+
