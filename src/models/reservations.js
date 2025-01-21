@@ -1,9 +1,13 @@
 const mongoose = require('mongoose');
 
 const reservationSchema = new mongoose.Schema({
-  id_barbero: { type: mongoose.Schema.Types.ObjectId, ref: 'Barber', required: true },
-  cel_cliente: { type: String, required: true },
-  name_cliente: { type: String, required: true },
+  barberId: { type: mongoose.Schema.Types.ObjectId, ref: 'Barber', required: true },
+  clientPhone: { type: String, required: true },
+  clientName: { type: String, required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  typeOfHaircut: { type: String, required: true },
+  price: { type: Number  },
+  timeRequired: { type: Number }, 
   day: { type: String, required: true },
   hours: { type: String, required: true }
 });
