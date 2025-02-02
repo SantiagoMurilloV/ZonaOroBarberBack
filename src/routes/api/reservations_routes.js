@@ -3,6 +3,7 @@ const router = express.Router();
 const reservationsControllers = require('../../controllers/reservations_controllers');
 
 router.post('/reservations', reservationsControllers.createReservation);
+router.get('/reservations',  reservationsControllers.getAllReservations);
 router.get('/reservations/barber/:id_barbero', reservationsControllers.getReservationsByBarber);
 router.get('/reservationsByDay/barber/:barberId', reservationsControllers.getReservationsByBarberDay);
 router.delete('/reservationsDelete/:reservationId', reservationsControllers.deleteReservation);
