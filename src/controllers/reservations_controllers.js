@@ -3,6 +3,17 @@ const { validationResult } = require('express-validator');
 const Reservation = require('../models/reservations');
 
 
+
+
+  exports.getAllReservations = async (req, res) => {
+    try {
+      const reservations = await Reservation.find()
+      res.status(200).send(reservations);
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  };
+
 exports.createReservation = async (req, res) => {
   const { barberId, clientPhone, clientName, userId, typeOfHaircut, day, hours, appointmentEnded, attendance } = req.body;
 
@@ -40,14 +51,7 @@ exports.createReservation = async (req, res) => {
 };
 
 
-exports.getAllReservations = async (req, res) => {
-  try {
-    const reservations = await Reservation.find().populate('barberId').populate('userId');
-    res.status(200).send(reservations);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-};
+
 
 // GET a single reservation by ID
 exports.getReservationById = async (req, res) => {
