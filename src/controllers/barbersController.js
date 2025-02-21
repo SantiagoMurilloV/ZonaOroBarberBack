@@ -3,13 +3,13 @@ const Barber = require('../models/barbers');
 exports.createBarber = (req, res) => {
   console.log("Datos recibidos en req.body:", req.body);
   
-  const { barber_idcart, first_name, last_name, specialization, email, phone_number } = req.body;
+  const { barber_idcart, first_name, last_name,telegram_Id, phone_number } = req.body;
 
-  if (!barber_idcart || !first_name || !last_name || !email || !phone_number) {
+  if (!barber_idcart || !first_name || !last_name || !telegram_Id || !phone_number) {
     return res.status(400).json({ error: 'Faltan campos obligatorios.' });
   }
 
-  const newBarber = new Barber({ barber_idcart, first_name, last_name, specialization, email, phone_number });
+  const newBarber = new Barber({ barber_idcart, first_name, last_name,telegram_Id, phone_number });
 
   newBarber.save()
     .then(barber => res.status(201).json(barber))
