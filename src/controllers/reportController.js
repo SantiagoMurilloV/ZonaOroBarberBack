@@ -1,6 +1,8 @@
 const Report = require('../models/report');
 
-// Función para crear un nuevo reporte
+
+
+
 exports.createReport = async (req, res) => {
   try {
     const { barberId, type, hours, dates } = req.body;
@@ -13,7 +15,8 @@ exports.createReport = async (req, res) => {
 };
 
 
-// Función para obtener reportes por barberId
+
+
 exports.getReportsByBarberId = async (req, res) => {
   try {
     const { barberId } = req.params;
@@ -25,7 +28,7 @@ exports.getReportsByBarberId = async (req, res) => {
 };
 
 
-// Función para eliminar un reporte específico
+
 exports.deleteReport = async (req, res) => {
   try {
     const { reportId } = req.params;  
@@ -42,7 +45,7 @@ exports.deleteReport = async (req, res) => {
 };
 
 
-// Función para actualizar un reporte específico
+
 exports.updateReport = async (req, res) => {
   try {
     const { reportId } = req.params;
