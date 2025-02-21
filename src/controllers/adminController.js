@@ -1,9 +1,9 @@
 const Admin = require('../models/admin');
 
 exports.createAdmin = (req, res) => {
-  const { admin_idcart, first_name, last_name, email, phone_number } = req.body;
+  const { admin_idcart, first_name, last_name, telegram_Id, phone_number } = req.body;
 
-  const newAdmin = new Admin({ admin_idcart, first_name, last_name, email, phone_number });
+  const newAdmin = new Admin({ admin_idcart, first_name, last_name, telegram_Id, phone_number });
 
   newAdmin.save()
     .then(admin => res.status(201).json(admin))
