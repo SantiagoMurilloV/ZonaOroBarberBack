@@ -2,9 +2,10 @@
 const { validationResult } = require('express-validator');
 const Reservation = require('../models/reservations');
 const Barber = require('../models/barbers'); 
+const Admin = require('../models/admin')
 const TelegramBot = require('node-telegram-bot-api');
-const token = '7876038771:AAHE3GE2K_88Yz-THno_uM9M3-lCyqjtKFY'
-const bot = new TelegramBot(token, { polling: true});
+// const token = '7876038771:AAHE3GE2K_88Yz-THno_uM9M3-lCyqjtKFY'
+// const bot = new TelegramBot(token, { polling: true});
 
 
 
@@ -58,7 +59,6 @@ exports.createReservation = async (req, res) => {
 
       const message = `*Nueva reserva:*\n
       - *Usuario:* ${clientName}
-      - *#cel:* ${clientPhone}
       - *Servicio:* ${typeOfHaircut}
       - *Fecha:* ${day}
       - *Hora:* ${hours}
@@ -69,8 +69,9 @@ exports.createReservation = async (req, res) => {
 
 
       bot.sendMessage(barber.telegram_Id, message, { parse_mode: 'Markdown' });
-      const adminTelegramId = 'YOUR_ADMIN_TELEGRAM_ID'; 
-      bot.sendMessage(adminTelegramId, message);
+      const admin = await Admin.findOne(); 
+      const adminTelegramId = admin.telegram_Id; 
+      bot.sendMessage(adminTelegramId, message, { parse_mode: 'Markdown' });
     }
 
     res.status(201).send(newReservation);
