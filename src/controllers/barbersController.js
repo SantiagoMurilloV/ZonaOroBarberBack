@@ -1,4 +1,26 @@
 const Barber = require('../models/barbers');
+const sharp = require('sharp'); 
+
+
+exports.uploadImage = async (req, res) => {
+  try {
+
+    const svgImage = await sharp(req.file.buffer)
+      .resize(100, 100) 
+      .toFormat('svg')
+      .toBuffer();
+
+
+    const barber = await Barber.findByIdAndUpdate(req.params.id, { svgImage: svgImage.toString() }, { new: true });
+    if (!barber) {
+      return res.status(404).send({ message: 'Barber not found' });
+    }
+
+    res.status(200).send({ message: 'Image uploaded successfully', barber });
+  } catch (error) {
+    res.status(500).send({ message: 'Failed to upload image', error: error.message });
+  }
+};
 
 exports.createBarber = (req, res) => {
   console.log("Datos recibidos en req.body:", req.body);

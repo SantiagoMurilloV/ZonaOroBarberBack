@@ -6,6 +6,7 @@ const barberSchema = new mongoose.Schema({
   last_name: { type: String, required: true },
   phone_number: { type: String, required: true },
   telegram_Id:{ type: String},
+  svgImage: { type: String },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now }
 });
