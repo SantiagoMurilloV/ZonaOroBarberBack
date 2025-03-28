@@ -4,8 +4,8 @@ const Reservation = require('../models/reservations');
 const Barber = require('../models/barbers'); 
 const Admin = require('../models/admin')
 const TelegramBot = require('node-telegram-bot-api');
-// const token = '7876038771:AAHE3GE2K_88Yz-THno_uM9M3-lCyqjtKFY'
-// const bot = new TelegramBot(token, { polling: true});
+const token = '7876038771:AAHE3GE2K_88Yz-THno_uM9M3-lCyqjtKFY'
+const bot = new TelegramBot(token, { polling: true});
 
 
 
