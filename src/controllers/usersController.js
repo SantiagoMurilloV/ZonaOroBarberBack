@@ -2,7 +2,10 @@ const User = require('../models/users');
 const { validationResult } = require('express-validator');
 
 exports.createUser = async (req, res) => {
-  const { first_name, last_name, phone_number } = req.body;
+  const { first_name, phone_number } = req.body;
+  let { last_name } = req.body; 
+
+  last_name = last_name || '';
 
   try {
 
