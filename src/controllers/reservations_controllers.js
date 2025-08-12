@@ -61,9 +61,9 @@ exports.createReservation = async (req, res) => {
       
 
 
-      // bot.sendMessage(barber.telegram_Id, message, { parse_mode: 'Markdown' });
-      // const adminTelegramId = 'YOUR_ADMIN_TELEGRAM_ID'; 
-      // bot.sendMessage(adminTelegramId, message);
+      bot.sendMessage(barber.telegram_Id, message, { parse_mode: 'Markdown' });
+      const adminTelegramId = 'YOUR_ADMIN_TELEGRAM_ID'; 
+      bot.sendMessage(adminTelegramId, message);
     }
 
     res.status(201).send(newReservation);
