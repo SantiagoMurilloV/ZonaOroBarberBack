@@ -13,6 +13,7 @@ const admin = require('./src/routes/api/adminRoutes');
 const users = require('./src/routes/api/usersRoutes');
 const appointments = require('./src/routes/api/appointmentsRoutes');
 const reports = require('./src/routes/api/reportRoutes');
+const pricesRoutes = require('./src/routes/api/priceRoutes');
 
 
 dotenv.config();
@@ -58,6 +59,7 @@ app.use('/api', admin);
 app.use('/api', users);
 app.use('/api', appointments);
 app.use('/api', reports);
+app.use('/api', pricesRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor Express en ejecución en el puerto ${PORT}`);

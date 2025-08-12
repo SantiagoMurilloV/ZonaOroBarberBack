@@ -1,10 +1,11 @@
 
 const { validationResult } = require('express-validator');
 const Reservation = require('../models/reservations');
+const Price = require('../models/prices');
 const Barber = require('../models/barbers'); 
 const TelegramBot = require('node-telegram-bot-api');
-const token = '7876038771:AAHE3GE2K_88Yz-THno_uM9M3-lCyqjtKFY'
-const bot = new TelegramBot(token, { polling: true});
+// const token = '7876038771:AAHE3GE2K_88Yz-THno_uM9M3-lCyqjtKFY'
+// const bot = new TelegramBot(token, { polling: true});
 
 
 
@@ -22,29 +23,21 @@ const bot = new TelegramBot(token, { polling: true});
 exports.createReservation = async (req, res) => {
   const { barberId, clientPhone, clientName, userId, typeOfHaircut, day, hours } = req.body;
 
-
-  const haircutDetails = {
-    'Corte': { price: 28000, timeRequired: 45 },
-    'Barba': { price: 18000, timeRequired: 30 },
-    'Corte y Barba': { price: 38000, timeRequired: 60 }
-  };
-
-
-  const details = haircutDetails[typeOfHaircut];
-
-  if (!details) {
-    return res.status(400).send({ error: 'Tipo de corte de cabello no válido' });
-  }
-
   try {
+
+    const priceDoc = await Price.findOne({ serviceName: typeOfHaircut }).lean();
+    if (!priceDoc) {
+      return res.status(400).send({ error: 'Servicio no configurado en precios' });
+    }
+
     const newReservation = new Reservation({
       barberId,
       clientPhone,
       clientName,
       userId,
       typeOfHaircut,
-      price: details.price,
-      timeRequired: details.timeRequired,
+      price: priceDoc.price,
+      timeRequired: priceDoc.timeRequired,
       day,
       hours
     });
@@ -62,15 +55,15 @@ exports.createReservation = async (req, res) => {
       - *Servicio:* ${typeOfHaircut}
       - *Fecha:* ${day}
       - *Hora:* ${hours}
-      - *Ingreso:* $${details.price}
-      - *Tiempo:* ${details.timeRequired} min\n`;
+      - *Ingreso:* $${priceDoc.price}
+      - *Tiempo:* ${priceDoc.timeRequired} min\n`;
       
       
 
 
-      bot.sendMessage(barber.telegram_Id, message, { parse_mode: 'Markdown' });
-      const adminTelegramId = 'YOUR_ADMIN_TELEGRAM_ID'; 
-      bot.sendMessage(adminTelegramId, message);
+      // bot.sendMessage(barber.telegram_Id, message, { parse_mode: 'Markdown' });
+      // const adminTelegramId = 'YOUR_ADMIN_TELEGRAM_ID'; 
+      // bot.sendMessage(adminTelegramId, message);
     }
 
     res.status(201).send(newReservation);
