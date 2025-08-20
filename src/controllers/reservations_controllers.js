@@ -5,8 +5,8 @@ const Price = require('../models/prices');
 const Barber = require('../models/barbers'); 
 const Admin = require('../models/admin')
 const TelegramBot = require('node-telegram-bot-api');
-const token = '7876038771:AAHE3GE2K_88Yz-THno_uM9M3-lCyqjtKFY'
-const bot = new TelegramBot(token, { polling: true});
+// const token = '7876038771:AAHE3GE2K_88Yz-THno_uM9M3-lCyqjtKFY'
+// const bot = new TelegramBot(token, { polling: true});
 
 
 
@@ -61,10 +61,10 @@ exports.createReservation = async (req, res) => {
       
 
 
-      bot.sendMessage(barber.telegram_Id, message, { parse_mode: 'Markdown' });
-      const admin = await Admin.findOne(); 
-      const adminTelegramId = admin.telegram_Id; 
-      bot.sendMessage(adminTelegramId, message, { parse_mode: 'Markdown' });
+      // bot.sendMessage(barber.telegram_Id, message, { parse_mode: 'Markdown' });
+      // const admin = await Admin.findOne(); 
+      // const adminTelegramId = admin.telegram_Id; 
+      // bot.sendMessage(adminTelegramId, message, { parse_mode: 'Markdown' });
     }
 
     res.status(201).send(newReservation);
@@ -119,16 +119,53 @@ exports.getReservationsByBarberDay = async (req, res) => {
 };
 
 
-exports.deleteReservation = (req, res) => {
-  const reservationId = req.params.reservationId;
-  
-  Reservation.findByIdAndDelete(reservationId)
-    .then(deletedReservation => {
-      if (!deletedReservation) return res.status(404).json({ error: 'Barbero no encontrado' });
-      res.json({ message: 'Barbero eliminado con éxito', deletedReservation });
-    })
-    .catch(error => res.status(500).json({ error: 'Error al eliminar el barbero' }));
+exports.deleteReservation = async (req, res) => {
+  const { reservationId } = req.params;
+
+  try {
+    // Elimina y retorna el documento eliminado
+    const deletedReservation = await Reservation.findByIdAndDelete(reservationId).lean();
+    if (!deletedReservation) {
+      return res.status(404).json({ error: 'Reserva no encontrada' });
+    }
+
+    // Buscar el barbero para obtener su telegram_Id
+    let barberTelegramId = null;
+    if (deletedReservation.barberId) {
+      const barber = await Barber.findById(deletedReservation.barberId).lean();
+      barberTelegramId = barber?.telegram_Id || null;
+    }
+
+    // Formatear mensaje de Telegram
+    const msg =
+      `*Reserva eliminada*\n` +
+      `- *Cliente:* ${deletedReservation.clientName}\n` +
+      `- *Fecha:* ${deletedReservation.day}\n` +
+      `- *Hora:* ${deletedReservation.hours}\n`;
+
+    // Enviar al barbero (si tiene Telegram vinculado)
+    if (barberTelegramId) {
+      bot.sendMessage(barberTelegramId, msg, { parse_mode: 'Markdown' }).catch(console.error);
+    }
+
+    // Enviar a admin si está configurado
+    const admin = await Admin.findOne(); 
+    const adminTelegramId = admin.telegram_Id; 
+    if (adminTelegramId) {
+      bot.sendMessage(adminTelegramId, msg, { parse_mode: 'Markdown' }).catch(console.error);
+    }
+
+    // Respuesta HTTP
+    return res.json({
+      message: 'Reserva eliminada con éxito',
+      deletedReservation
+    });
+  } catch (error) {
+    console.error('Error al eliminar la reserva:', error);
+    return res.status(500).json({ error: 'Error al eliminar la reserva' });
+  }
 };
+
 
 
 

@@ -1,14 +1,47 @@
 const Price = require('../models/prices');
 
 // Crear un nuevo servicio
-exports.createPrice = (req, res) => {
-  const { serviceName, price, timeRequired } = req.body;
+exports.createPrice = async (req, res) => {
+  try {
+    let { serviceName, price, timeRequired } = req.body;
 
-  const newPrice = new Price({ serviceName, price, timeRequired });
+    // --- Normalización ---
+    serviceName = (serviceName ?? '').trim();
+    price = Number(price);
+    timeRequired = Number(timeRequired);
 
-  newPrice.save()
-    .then(priceDoc => res.status(201).json(priceDoc))
-    .catch(error => res.status(500).json({ error: 'Error al crear el precio', details: error.message }));
+    // --- Validaciones básicas ---
+    if (!serviceName) {
+      return res.status(400).json({ error: 'El nombre del servicio es obligatorio' });
+    }
+    if (!Number.isFinite(price) || price < 0) {
+      return res.status(400).json({ error: 'Precio inválido (>= 0)' });
+    }
+    if (!Number.isFinite(timeRequired) || timeRequired <= 0) {
+      return res.status(400).json({ error: 'Tiempo requerido inválido (minutos > 0)' });
+    }
+
+    // --- Chequeo de duplicado case-insensitive ---
+    const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const exists = await Price.findOne({
+      serviceName: { $regex: `^${escapeRegex(serviceName)}$`, $options: 'i' }
+    }).lean();
+
+    if (exists) {
+      return res.status(409).json({ error: 'Ya existe un servicio con ese nombre' });
+    }
+
+    // --- Crear ---
+    const doc = await Price.create({ serviceName, price, timeRequired });
+    return res.status(201).json(doc);
+  } catch (err) {
+    // Si tienes índice único y salta E11000
+    if (err?.code === 11000) {
+      return res.status(409).json({ error: 'Ya existe un servicio con ese nombre' });
+    }
+    console.error('Error al crear el precio:', err);
+    return res.status(500).json({ error: 'Error al crear el precio' });
+  }
 };
 
 // Obtener todos los servicios
@@ -53,3 +86,5 @@ exports.deletePrice = (req, res) => {
     })
     .catch(error => res.status(500).json({ error: 'Error al eliminar el servicio' }));
 };
+
+
