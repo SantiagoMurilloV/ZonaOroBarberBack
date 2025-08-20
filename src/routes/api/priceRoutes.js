@@ -5,7 +5,7 @@ const router = express.Router();
 const priceController = require('../../controllers/priceController');
 
 // Crear un nuevo servicio
-router.post('/', priceController.createPrice);
+router.post('/prices', priceController.createPrice);
 
 // Obtener todos los servicios
 router.get('/prices', priceController.getAllPrices);
