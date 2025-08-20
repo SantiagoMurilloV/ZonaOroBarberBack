@@ -2,23 +2,23 @@
 const { validationResult } = require('express-validator');
 const Reservation = require('../models/reservations');
 const Price = require('../models/prices');
-const Barber = require('../models/barbers'); 
+const Barber = require('../models/barbers');
 const Admin = require('../models/admin')
 const TelegramBot = require('node-telegram-bot-api');
-// const token = '7876038771:AAHE3GE2K_88Yz-THno_uM9M3-lCyqjtKFY'
-// const bot = new TelegramBot(token, { polling: true});
+const token = '7876038771:AAHE3GE2K_88Yz-THno_uM9M3-lCyqjtKFY'
+const bot = new TelegramBot(token, { polling: true });
 
 
 
 
-  exports.getAllReservations = async (req, res) => {
-    try {
-      const reservations = await Reservation.find()
-      res.status(200).send(reservations);
-    } catch (error) {
-      res.status(500).send(error);
-    }
-  };
+exports.getAllReservations = async (req, res) => {
+  try {
+    const reservations = await Reservation.find()
+    res.status(200).send(reservations);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
 
 
 exports.createReservation = async (req, res) => {
@@ -57,14 +57,14 @@ exports.createReservation = async (req, res) => {
       - *Hora:* ${hours}
       - *Ingreso:* $${priceDoc.price}
       - *Tiempo:* ${priceDoc.timeRequired} min\n`;
-      
-      
 
 
-      // bot.sendMessage(barber.telegram_Id, message, { parse_mode: 'Markdown' });
-      // const admin = await Admin.findOne(); 
-      // const adminTelegramId = admin.telegram_Id; 
-      // bot.sendMessage(adminTelegramId, message, { parse_mode: 'Markdown' });
+
+
+      bot.sendMessage(barber.telegram_Id, message, { parse_mode: 'Markdown' });
+      const admin = await Admin.findOne();
+      const adminTelegramId = admin.telegram_Id;
+      bot.sendMessage(adminTelegramId, message, { parse_mode: 'Markdown' });
     }
 
     res.status(201).send(newReservation);
@@ -106,9 +106,9 @@ exports.getReservationsByBarberDay = async (req, res) => {
   const { day } = req.query;
 
   try {
-    const query = { barberId : barberId };
+    const query = { barberId: barberId };
     if (day) {
-      query.day = day; 
+      query.day = day;
     }
     const reservations = await Reservation.find(query).sort({ hours: 1 });
     res.status(200).json(reservations);
@@ -149,8 +149,8 @@ exports.deleteReservation = async (req, res) => {
     }
 
     // Enviar a admin si está configurado
-    const admin = await Admin.findOne(); 
-    const adminTelegramId = admin.telegram_Id; 
+    const admin = await Admin.findOne();
+    const adminTelegramId = admin.telegram_Id;
     if (adminTelegramId) {
       bot.sendMessage(adminTelegramId, msg, { parse_mode: 'Markdown' }).catch(console.error);
     }
