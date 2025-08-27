@@ -9,7 +9,9 @@ const reservationSchema = new mongoose.Schema({
   price: { type: Number  },
   timeRequired: { type: Number }, 
   day: { type: String, required: true },
-  hours: { type: String, required: true }, 
+  hours: [{
+    type: String , required: true 
+  }],
   appointmentEnded: { type: String }, 
   attendance: { type: String  }
 });
