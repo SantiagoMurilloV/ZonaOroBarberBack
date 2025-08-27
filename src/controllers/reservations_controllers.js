@@ -5,8 +5,8 @@ const Price = require('../models/prices');
 const Barber = require('../models/barbers');
 const Admin = require('../models/admin')
 const TelegramBot = require('node-telegram-bot-api');
-// const token = '7876038771:AAHE3GE2K_88Yz-THno_uM9M3-lCyqjtKFY'
-// const bot = new TelegramBot(token, { polling: true });
+const token = '7876038771:AAHE3GE2K_88Yz-THno_uM9M3-lCyqjtKFY'
+const bot = new TelegramBot(token, { polling: true });
 
 
 
@@ -63,10 +63,10 @@ exports.createReservation = async (req, res) => {
         - *Tiempo:* ${priceDoc.timeRequired} min\n`;
 
 
-      // bot.sendMessage(barber.telegram_Id, message, { parse_mode: 'Markdown' });
-      // const admin = await Admin.findOne();
-      // const adminTelegramId = admin.telegram_Id;
-      // bot.sendMessage(adminTelegramId, message, { parse_mode: 'Markdown' });
+      bot.sendMessage(barber.telegram_Id, message, { parse_mode: 'Markdown' });
+      const admin = await Admin.findOne();
+      const adminTelegramId = admin.telegram_Id;
+      bot.sendMessage(adminTelegramId, message, { parse_mode: 'Markdown' });
     }
 
     res.status(201).send(newReservation);
@@ -155,11 +155,11 @@ exports.deleteReservation = async (req, res) => {
     }
 
     // Enviar a admin si está configurado
-    // const admin = await Admin.findOne();
-    // const adminTelegramId = admin.telegram_Id;
-    // if (adminTelegramId) {
-    //   bot.sendMessage(adminTelegramId, msg, { parse_mode: 'Markdown' }).catch(console.error);
-    // }
+    const admin = await Admin.findOne();
+    const adminTelegramId = admin.telegram_Id;
+    if (adminTelegramId) {
+      bot.sendMessage(adminTelegramId, msg, { parse_mode: 'Markdown' }).catch(console.error);
+    }
 
     // Respuesta HTTP
     return res.json({
