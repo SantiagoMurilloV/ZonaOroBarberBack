@@ -5,8 +5,8 @@ const Price = require('../models/prices');
 const Barber = require('../models/barbers');
 const Admin = require('../models/admin')
 const TelegramBot = require('node-telegram-bot-api');
-const token = '7876038771:AAHE3GE2K_88Yz-THno_uM9M3-lCyqjtKFY'
-const bot = new TelegramBot(token, { polling: true });
+// const token = '7876038771:AAHE3GE2K_88Yz-THno_uM9M3-lCyqjtKFY'
+// const bot = new TelegramBot(token, { polling: true });
 
 
 
@@ -19,18 +19,30 @@ exports.getAllReservations = async (req, res) => {
     res.status(500).send(error);
   }
 };
-
-
 exports.createReservation = async (req, res) => {
   const { barberId, clientPhone, clientName, userId, typeOfHaircut, day, hours } = req.body;
 
   try {
-
+    // 1. Validar que el servicio exista en Price
     const priceDoc = await Price.findOne({ serviceName: typeOfHaircut }).lean();
     if (!priceDoc) {
       return res.status(400).send({ error: 'Servicio no configurado en precios' });
     }
 
+    // 2. Buscar reservas existentes para ese barbero en ese día
+    const existingReservations = await Reservation.find({ barberId, day }).lean();
+
+    // 3. Verificar si alguna de las horas ya está ocupada
+    const reservedHours = existingReservations.flatMap(r => r.hours); // todas las horas ya ocupadas
+    const conflict = hours.some(h => reservedHours.includes(h));
+
+    if (conflict) {
+      return res.status(400).send({
+        error: 'Esta hora ya no está disponible. Recargue la página para visualizar los horarios disponibles.'
+      });
+    }
+
+    // 4. Crear la nueva reserva
     const newReservation = new Reservation({
       barberId,
       clientPhone,
@@ -43,15 +55,13 @@ exports.createReservation = async (req, res) => {
       hours
     });
 
-
     await newReservation.save();
 
-
+    // 5. Enviar notificación al barbero por Telegram (si aplica)
     const barber = await Barber.findById(barberId);
     if (barber && barber.telegram_Id) {
-
       const hoursText = Array.isArray(hours)
-        ? hours.map(h => `    • ${h}`).join('\n')   // 🔥 formato con viñeta
+        ? hours.map(h => `    • ${h}`).join('\n')
         : hours;
 
       const message = `*Nueva reserva:*\n
@@ -62,19 +72,21 @@ exports.createReservation = async (req, res) => {
         - *Ingreso:* $${priceDoc.price}
         - *Tiempo:* ${priceDoc.timeRequired} min\n`;
 
-
-      bot.sendMessage(barber.telegram_Id, message, { parse_mode: 'Markdown' });
-      const admin = await Admin.findOne();
-      const adminTelegramId = admin.telegram_Id;
-      bot.sendMessage(adminTelegramId, message, { parse_mode: 'Markdown' });
+      // bot.sendMessage(barber.telegram_Id, message, { parse_mode: 'Markdown' });
+      // const admin = await Admin.findOne();
+      // if (admin?.telegram_Id) {
+      //   bot.sendMessage(admin.telegram_Id, message, { parse_mode: 'Markdown' });
+      // }
     }
 
+    // 6. Responder al cliente
     res.status(201).send(newReservation);
+
   } catch (error) {
-    res.status(400).send(error);
+    console.error("Error al crear reserva:", error);
+    res.status(400).send({ error: "Error al crear reserva", details: error.message });
   }
 };
-
 
 
 // GET a single reservation by ID
@@ -155,11 +167,11 @@ exports.deleteReservation = async (req, res) => {
     }
 
     // Enviar a admin si está configurado
-    const admin = await Admin.findOne();
-    const adminTelegramId = admin.telegram_Id;
-    if (adminTelegramId) {
-      bot.sendMessage(adminTelegramId, msg, { parse_mode: 'Markdown' }).catch(console.error);
-    }
+    // const admin = await Admin.findOne();
+    // const adminTelegramId = admin.telegram_Id;
+    // if (adminTelegramId) {
+    //   bot.sendMessage(adminTelegramId, msg, { parse_mode: 'Markdown' }).catch(console.error);
+    // }
 
     // Respuesta HTTP
     return res.json({

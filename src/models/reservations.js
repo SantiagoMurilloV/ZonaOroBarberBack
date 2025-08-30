@@ -13,7 +13,9 @@ const reservationSchema = new mongoose.Schema({
     type: String , required: true 
   }],
   appointmentEnded: { type: String }, 
-  attendance: { type: String  }
+  attendance: { type: String  },
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model('Reservation', reservationSchema);
