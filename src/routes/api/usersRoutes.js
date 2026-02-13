@@ -4,6 +4,8 @@ const usersController = require('../../controllers/usersController');
 
 router.post('/users', usersController.createUser);
 router.get('/users', usersController.getAllUsers);
+router.get('/users/list/paginated', usersController.getUsersForList);
+router.get('/users/:userId/reservations', usersController.getReservationsByUser);
 router.get('/users/:userId', usersController.getUserById);
 router.put('/users/:userId', usersController.updateUser);
 router.delete('/users/:userId', usersController.deleteUser);

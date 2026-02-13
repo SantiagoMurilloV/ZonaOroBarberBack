@@ -1,4 +1,5 @@
 const User = require('../models/users');
+const Reservation = require('../models/reservations');
 const { validationResult } = require('express-validator');
 
 exports.createUser = async (req, res) => {
@@ -27,6 +28,85 @@ exports.getAllUsers = (req, res) => {
   User.find()
     .then(users => res.json(users))
     .catch(error => res.status(500).json({ error: 'Error al obtener los usuarios' }));
+};
+
+exports.getUsersForList = async (req, res) => {
+  try {
+    const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+    const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 20, 1), 100);
+    const search = (req.query.search || '').trim();
+    const skip = (page - 1) * limit;
+
+    const matchStage = search
+      ? {
+          $match: {
+            $or: [
+              { first_name: { $regex: search, $options: 'i' } },
+              { last_name: { $regex: search, $options: 'i' } },
+              { phone_number: { $regex: search, $options: 'i' } }
+            ]
+          }
+        }
+      : null;
+
+    const pipeline = [];
+    if (matchStage) pipeline.push(matchStage);
+
+    pipeline.push(
+      {
+        $lookup: {
+          from: 'reservations',
+          let: { userId: '$_id' },
+          pipeline: [
+            { $match: { $expr: { $eq: ['$userId', '$$userId'] } } },
+            { $count: 'count' }
+          ],
+          as: 'reservationStats'
+        }
+      },
+      {
+        $addFields: {
+          reservationCount: {
+            $ifNull: [{ $arrayElemAt: ['$reservationStats.count', 0] }, 0]
+          }
+        }
+      },
+      { $project: { reservationStats: 0 } },
+      { $sort: { reservationCount: -1, first_name: 1 } },
+      {
+        $facet: {
+          metadata: [{ $count: 'totalItems' }],
+          data: [{ $skip: skip }, { $limit: limit }]
+        }
+      }
+    );
+
+    const [result] = await User.aggregate(pipeline);
+    const totalItems = result?.metadata?.[0]?.totalItems || 0;
+    const totalPages = Math.max(1, Math.ceil(totalItems / limit));
+
+    return res.status(200).json({
+      data: result?.data || [],
+      page,
+      limit,
+      totalItems,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPrevPage: page > 1
+    });
+  } catch (error) {
+    return res.status(500).json({ error: 'Error al obtener usuarios paginados', details: error.message });
+  }
+};
+
+exports.getReservationsByUser = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const reservations = await Reservation.find({ userId }).sort({ day: -1, created_at: -1 }).lean();
+    return res.status(200).json(reservations);
+  } catch (error) {
+    return res.status(500).json({ error: 'Error al obtener reservas del usuario', details: error.message });
+  }
 };
 
 exports.getUserById = (req, res) => {
