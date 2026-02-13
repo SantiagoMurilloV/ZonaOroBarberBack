@@ -5,18 +5,57 @@ const Price = require('../models/prices');
 const Barber = require('../models/barbers');
 const Admin = require('../models/admin')
 const TelegramBot = require('node-telegram-bot-api');
-const token = '7876038771:AAHE3GE2K_88Yz-THno_uM9M3-lCyqjtKFY'
-const bot = new TelegramBot(token, { polling: true });
+const moment = require('moment');
+//const token = '7876038771:AAHE3GE2K_88Yz-THno_uM9M3-lCyqjtKFY'
+//const bot = new TelegramBot(token, { polling: true });
 
 
 
 
 exports.getAllReservations = async (req, res) => {
+  const { startDate, endDate } = req.query;
+
   try {
-    const reservations = await Reservation.find()
-    res.status(200).send(reservations);
+    if (!startDate && !endDate) {
+      const reservations = await Reservation.find();
+      return res.status(200).send(reservations);
+    }
+
+    const isStartDateValid = !startDate || moment(startDate, 'YYYY-MM-DD', true).isValid();
+    const isEndDateValid = !endDate || moment(endDate, 'YYYY-MM-DD', true).isValid();
+    if (!isStartDateValid || !isEndDateValid) {
+      return res.status(400).json({
+        error: 'startDate y endDate deben tener formato YYYY-MM-DD'
+      });
+    }
+
+    const rangeStart = startDate
+      ? moment(startDate, 'YYYY-MM-DD', true).startOf('day')
+      : moment('1900-01-01', 'YYYY-MM-DD').startOf('day');
+    const rangeEnd = endDate
+      ? moment(endDate, 'YYYY-MM-DD', true).endOf('day')
+      : moment('2999-12-31', 'YYYY-MM-DD').endOf('day');
+
+    if (rangeStart.isAfter(rangeEnd)) {
+      return res.status(400).json({
+        error: 'startDate no puede ser mayor a endDate'
+      });
+    }
+
+    const reservations = await Reservation.find().lean();
+    const filteredReservations = reservations.filter((reservation) => {
+      if (!reservation?.day) return false;
+      const reservationDay = moment(reservation.day);
+      if (!reservationDay.isValid()) return false;
+      return (
+        reservationDay.isSameOrAfter(rangeStart, 'day') &&
+        reservationDay.isSameOrBefore(rangeEnd, 'day')
+      );
+    });
+
+    return res.status(200).send(filteredReservations);
   } catch (error) {
-    res.status(500).send(error);
+    return res.status(500).send(error);
   }
 };
 exports.createReservation = async (req, res) => {
@@ -183,7 +222,6 @@ exports.deleteReservation = async (req, res) => {
     return res.status(500).json({ error: 'Error al eliminar la reserva' });
   }
 };
-
 
 
 
